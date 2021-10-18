@@ -101,6 +101,46 @@ int main()
 		writer << "Score:" << score << "  Lives:" << lives;
 		hud.setString(writer.str());
 
+		// Hadnle ball hitting bottom
+		if (ball.getPosition().top > window.getSize().y)
+		{
+			// Reverse ball direction
+			ball.reboundBottom();
+
+			// Remove 1 life
+			lives--;
+
+			// check for game over if 0 lives
+			if (lives < 1)
+			{
+				//reset score
+				score = 0;
+				//reset lives
+				lives = 3;
+			}
+		}
+
+		// Handle ball hitting top
+		if (ball.getPosition().top < 0)
+		{
+			ball.reboundBatOrTop();
+			// Add a point to the players score
+			score++;
+		}
+
+		// Handke ball hitting sides
+		if (ball.getPosition().left < 0 ||
+			ball.getPosition().left + ball.getPosition().width >
+			window.getSize().x)
+		{
+			ball.reboundSides();
+		}
+
+		if (ball.getPosition().intersects(bat.getPosition()))
+		{
+			ball.reboundBatOrTop();
+		}
+
 		/*
 		Draw the bat, the hud and the ball
 		*********************************
@@ -112,7 +152,7 @@ int main()
 
 		window.draw(hud);
 		window.draw(bat.getShape());
-		window.draw(ball .getShape());
+		window.draw(ball.getShape());
 
 		window.display();
 	}
